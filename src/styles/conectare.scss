@@ -1,0 +1,70 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --white: #f7f7ff;
+  --gray: #ececec;
+  --slate: #aeaeae;
+}
+
+.cm {
+  height: 100vh;
+  width: 100vw;
+  background: url("../assets/sun-tornado.svg") no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--white);
+  padding: 3rem;
+  border-radius: 10px;
+  align-items: center;
+  h1 {
+    font-size: 50px;
+    margin-bottom: 2.5rem;
+  }
+  .input {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    input {
+      background-color: var(--gray);
+      border: none;
+      border-radius: 30px;
+      padding: 1rem;
+    }
+    .eticheta {
+      font-weight: 500;
+      font-size: 24px;
+    }
+  }
+  button {
+    border: none;
+    background-color: var(--gray);
+    font-weight: bold;
+    font-size: 24px;
+    padding: 8px 30px;
+    border-radius: 30px;
+    margin-top: 2rem;
+  }
+  h2 {
+    margin-top: 3rem;
+    color: var(--slate);
+    font-weight: 500;
+    a {
+      text-decoration: none;
+      color: var(--slate);
+      font-weight: 900;
+    }
+  }
+}
