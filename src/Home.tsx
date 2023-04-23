@@ -2,6 +2,11 @@ import React from "react";
 
 const logo = require("./assets/logo.png");
 const desen = require("./assets/desen.png");
+const placeholder = require("./assets/700x500.png");
+const rapid = require("./assets/rapid.png");
+const sigur = require("./assets/sigur.png");
+const incredere = require("./assets/de_incredere.png");
+const how = require("./assets/how.png");
 
 function Home() {
   return (
@@ -61,7 +66,7 @@ function Home() {
         <div className="why_us">
           <div className="text_img">
             <div className="img">
-              <img src="" alt="image1" />
+              <img src={placeholder} alt="image1" />
             </div>
             <div className="text">
               <h2>De ce noi ?</h2>
@@ -72,21 +77,21 @@ function Home() {
                 consequuntur eum tempore ex odit libero!
               </p>
             </div>
-            <div className="perks">
-              <div className="perk">
-                <img src="" alt="perk" />
-                <h2>Rapid</h2>
-              </div>
-              <hr></hr>
-              <div className="perk">
-                <img src="" alt="perk" />
-                <h2>De incredere</h2>
-              </div>
-              <hr></hr>
-              <div className="perk">
-                <img src="" alt="perk" />
-                <h2>Sigur</h2>
-              </div>
+          </div>
+          <div className="perks">
+            <div className="perk">
+              <img src={rapid} alt="perk" className="perk" />
+              <h2>Rapid</h2>
+            </div>
+            <hr></hr>
+            <div className="perk">
+              <img src={incredere} alt="perk" className="perk" />
+              <h2>De încredere</h2>
+            </div>
+            <hr></hr>
+            <div className="perk">
+              <img src={sigur} alt="perk" className="perk" />
+              <h2>Sigur</h2>
             </div>
           </div>
         </div>
@@ -94,7 +99,7 @@ function Home() {
         <div className="how">
           <div className="text_p">
             <div className="text">
-              <h2>Cum functioneaza ?</h2>
+              <h2>Cum funcționează ?</h2>
               <p>
                 Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nemo
                 quas quisquam aspernatur maiores delectus facere dicta nihil
@@ -104,15 +109,14 @@ function Home() {
             </div>
           </div>
           <div className="how_img">
-            <img src="" alt="img" />
+            <img src={how} alt="how" />
           </div>
         </div>
       </div>
 
       <div className="quote">
         <h1>
-          "Daca o cale e mai buna decat alta, atunci fii sigur ca e calea
-          naturii." - Aristotel
+        “Dacă o cale e mai bună decăt alta, atunci fii sigur că e calea <span className="green">naturii</span> .” - Aristotel
         </h1>
       </div>
     </div>
