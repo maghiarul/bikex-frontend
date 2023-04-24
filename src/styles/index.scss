@@ -180,8 +180,26 @@ html {
   align-items: center;
   margin-left: 12rem;
   margin-right: 10rem;
-  h1{
+  h1 {
     font-weight: 900;
     font-size: 85px;
   }
+}
+
+#user_pfp {
+  width: 64px;
+  height: 64px;
+}
+svg {
+  width: 16px;
+  height: 16px;
+  position: relative;
+  transform: translateX(-120%) translateY(-20%);
+  // circle{
+  //   fill: green;
+  // }
+}
+
+.disabled{
+  display: none;
 }

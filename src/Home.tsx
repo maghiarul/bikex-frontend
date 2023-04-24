@@ -7,6 +7,7 @@ const rapid = require("./assets/rapid.png");
 const sigur = require("./assets/sigur.png");
 const incredere = require("./assets/de_incredere.png");
 const how = require("./assets/how.png");
+const user_pfp = require("./assets/user.png");
 
 function Home() {
   return (
@@ -29,14 +30,26 @@ function Home() {
             <div className="nav-item">
               <a href="/descopera">Descoperă</a>
             </div>
-            <hr></hr>
+            <hr className=""></hr>
             <div className="nav-item">
               <a href="/conectare">Conectare</a>
             </div>
-            <div className="nav-item ">
+            <div className="nav-item">
               <a href="/inscriere" className="black-bg">
                 Înscriere
               </a>
+            </div>
+            <div className="nav-item disabled ">
+              <img src={user_pfp} id="user_pfp" alt="userpfp" />
+              <svg
+                width="100"
+                height="100"
+                viewBox="0 0 100 100"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="50" cy="50" r="50" fill="#FD0000" />
+              </svg>
             </div>
           </div>
         </div>
@@ -116,7 +129,8 @@ function Home() {
 
       <div className="quote">
         <h1>
-        “Dacă o cale e mai bună decăt alta, atunci fii sigur că e calea <span className="green">naturii</span> .” - Aristotel
+          “Dacă o cale e mai bună decăt alta, atunci fii sigur că e calea{" "}
+          <span className="green">naturii</span> .” - Aristotel
         </h1>
       </div>
     </div>

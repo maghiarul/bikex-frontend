@@ -1,0 +1,79 @@
+.nush {
+  display: flex;
+}
+
+.dropdown {
+  margin: 5rem;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 5px solid black;
+  border-radius: 30px;
+  h1 {
+    background-color: #fff;
+    z-index: 10;
+    position: relative;
+    transform: translateY(-55%);
+    padding: 1rem;
+    font-size: 24px;
+  }
+  .dropdown-items {
+    margin-bottom: 10rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    .dropdown-item {
+      flex: 50%;
+      text-align: center;
+      border: 2.5px solid black;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      margin: 1rem;
+      margin-bottom: 2rem;
+      max-width: 200px;
+      border-radius: 20px;
+      label {
+        font-weight: 600;
+      }
+      input {
+        position: relative;
+        transform: translateX(-100%);
+        accent-color: black;
+      }
+    }
+  }
+}
+
+.list {
+    width: 60%;
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  .list-item {
+    display: flex;
+    margin: 1rem;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    border: 5px solid black;
+    border-radius: 30px;
+    .shop {
+      width: 64px;
+      height: 64px;
+    }
+    .details {
+      display: flex;
+      flex-direction: column;
+      font-weight: bold;
+      margin-right: 2rem;
+      margin-left: 2rem;
+      .gray {
+        color: #aeaeae;
+      }
+    }
+  }
+}
