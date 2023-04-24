@@ -35,12 +35,26 @@ function callMap() {
             fromLonLat([28.035817017663444, 45.440741163831625])
           ),
         }),
-        // multiple markers like this.
-        // new Feature({
-        //   geometry: new Point(
-        //     fromLonLat([28.049817017663444, 45.440741163831625])
-        //   ),
-        // }),
+        new Feature({
+          geometry: new Point(
+            fromLonLat([27.603447293283057, 47.1547069796327])
+          ),
+        }),
+        new Feature({
+          geometry: new Point(
+            fromLonLat([26.102531257911046, 44.43534472004674])
+          ),
+        }),
+        new Feature({
+          geometry: new Point(
+            fromLonLat([25.609849723159783, 45.652208499224734])
+          ),
+        }),
+        new Feature({
+          geometry: new Point(
+            fromLonLat([23.596253795307078, 46.77183528160379])
+          ),
+        }),
       ],
     }),
     style: new Style({
@@ -77,17 +91,17 @@ function Descopera() {
       </div>
       <div className="bl">
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi ea
-          eaque nisi fuga necessitatibus adipisci. Dolore ad aliquid obcaecati,
-          magnam molestiae laborum, ea id provident modi possimus alias
-          voluptates hic?
+          Ați ghicit bine ! Acum avem și aplicație de telefon ! Dacă scanați
+          codul QR de mai jos ve-ți fi redirecționati către Play Store unde
+          ve-ți putea instala aplicația.
         </p>
         <img alt="qr" src={qr} />
         <p>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsum
-          doloribus nostrum reprehenderit similique temporibus iusto quibusdam
-          nam modi, suscipit maxime perspiciatis dicta magni nobis commodi
-          harum, repudiandae qui, illo quis!
+          În urma feedback-ului , am văzut ca mulți useri își planifică ieșirile
+          în momentul când ies afară, si noi ne-am gândit se le ușurăm planurile
+          lansând aplicația. Acum te poți duce la orice punct de staționare a
+          bicicletelor/trotinetelor electrice și cu o singură scanare te poți
+          pune în mișcare !
         </p>
       </div>
     </div>

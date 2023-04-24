@@ -2,8 +2,17 @@ import React from "react";
 import "../styles/conectare.scss";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 function Conectare() {
+  const navigate = useNavigate();
+  const navigateHome = () => {
+    navigate("/");
+  };
+
+  var t = "";
+
   const [email, setEmail] = useState("");
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -19,6 +28,22 @@ function Conectare() {
     email: email,
     password: pass,
   });
+  const [cookies, setCookie] = useCookies(["token", "email"]);
+
+  const handleCookie = () => {
+    setCookie("token", t, {
+      path: "/",
+      maxAge: 3600,
+      secure: true,
+      sameSite: "none",
+    });
+    setCookie("email", email, {
+      path: "/",
+      maxAge: 3600,
+      secure: true,
+      sameSite: "none",
+    });
+  };
 
   const Login = async () => {
     // eslint-disable-next-line
@@ -28,15 +53,10 @@ function Conectare() {
           "Content-Type": "application/json",
         },
       })
-      // .then((res) => {
-      //   t = res.data.token;
-      //   handleCookie();
-      //   if (cookies.token) {
-      //     navigateDashboard();
-      //   }
-      // });
       .then((res) => {
-        console.log(res.data);
+        t = res.data.token;
+        handleCookie();
+        navigateHome();
       });
   };
 

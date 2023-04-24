@@ -61,9 +61,14 @@
     padding: 1rem;
     border: 5px solid black;
     border-radius: 30px;
+    img {
+      height: 80px;
+      width: auto;
+    }
     .shop {
       width: 64px;
       height: 64px;
+      cursor: pointer;
     }
     .details {
       display: flex;
@@ -76,4 +81,8 @@
       }
     }
   }
+}
+
+.disabled{
+  display: none;
 }
