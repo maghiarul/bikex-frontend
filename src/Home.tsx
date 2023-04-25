@@ -18,7 +18,7 @@ function Home() {
         <div className="container1">
           <div className="navbar">
             <div className="logo nav-item">
-              <img src={logo} alt="logo" />
+              <img src={logo} alt="logo"/>
             </div>
             <span></span>
             <span></span>

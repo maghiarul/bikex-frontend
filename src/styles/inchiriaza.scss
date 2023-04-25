@@ -47,7 +47,7 @@
 }
 
 .list {
-    width: 60%;
+  width: 60%;
   margin-top: 2rem;
   display: flex;
   justify-content: center;
@@ -83,6 +83,26 @@
   }
 }
 
-.disabled{
+.disabled {
   display: none;
+}
+
+.lo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5rem;
+  img {
+    height: 300px;
+    width: auto;
+  }
+  a {
+    text-decoration: none;
+    color: #100c08;
+    font-weight: 700;
+    font-size: 48px;
+    padding:1rem;
+    margin: 1rem;
+  }
 }

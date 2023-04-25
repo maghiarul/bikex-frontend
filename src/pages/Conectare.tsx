@@ -5,6 +5,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
+const authLogo = require("../assets/auth.png");
+
 function Conectare() {
   const navigate = useNavigate();
   const navigateHome = () => {
@@ -63,6 +65,7 @@ function Conectare() {
   return (
     <div className="cm">
       <div className="form">
+        <img src={authLogo} alt="logo" id="authLogo"/>
         <h1>Conectare</h1>
         <div className="input">
           <span className="eticheta">Email*</span>

@@ -3,6 +3,8 @@ import "../styles/inscriere.scss";
 import { useState } from "react";
 import axios from "axios";
 
+const regLogo = require("../assets/regLogo.png");
+
 function Inscriere() {
   const [email, setEmail] = useState("");
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +33,7 @@ function Inscriere() {
   return (
     <div className="cm">
       <div className="form">
+        <img src={regLogo} alt="regLogo" id="regLogo" />
         <h1>Înscriere</h1>
         <div className="input">
           <span className="eticheta">Email*</span>
