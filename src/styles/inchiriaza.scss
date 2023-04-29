@@ -20,7 +20,7 @@
     font-size: 24px;
   }
   .dropdown-items {
-    margin-bottom: 10rem;
+    margin-bottom: 3rem;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -105,4 +105,32 @@
     padding:1rem;
     margin: 1rem;
   }
+}
+
+.echipament-item {
+  text-align: center;
+  border: 2.5px solid black;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin: 1rem;
+  margin-bottom: 2rem;
+  min-width: 150px;
+  border-radius: 20px;
+  label {
+    font-weight: 600;
+  }
+  input {
+    position: relative;
+    transform: translateX(-100%);
+    accent-color: black;
+  }
+}
+
+.smt{
+  display: flex;
+  justify-content: center;
+}
+
+.echipament{
+  margin-bottom: 3rem;
 }

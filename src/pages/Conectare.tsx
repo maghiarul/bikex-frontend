@@ -1,11 +1,20 @@
 import React from "react";
 import "../styles/conectare.scss";
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 
+import config from "../firebaseConfig";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import * as lol from "firebase/app";
+
 const authLogo = require("../assets/auth.png");
+
+lol.initializeApp(config);
+const auth = getAuth();
 
 function Conectare() {
   const navigate = useNavigate();
@@ -26,11 +35,12 @@ function Conectare() {
     setPass(e.target.value);
   };
 
-  const data = JSON.stringify({
-    email: email,
-    password: pass,
-  });
-  const [cookies, setCookie] = useCookies(["token", "email"]);
+  // const data = JSON.stringify({
+  //   email: email,
+  //   password: pass,
+  // });
+  // eslint-disable-next-line
+  const [cookies, setCookie] = useCookies(["token"]);
 
   const handleCookie = () => {
     setCookie("token", t, {
@@ -39,33 +49,41 @@ function Conectare() {
       secure: true,
       sameSite: "none",
     });
-    setCookie("email", email, {
-      path: "/",
-      maxAge: 3600,
-      secure: true,
-      sameSite: "none",
-    });
+    // setCookie("email", email, {
+    //   path: "/",
+    //   maxAge: 3600,
+    //   secure: true,
+    //   sameSite: "none",
+    // });
   };
 
-  const Login = async () => {
-    // eslint-disable-next-line
-    const res = await axios
-      .post("http://localhost:4000/login", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((res) => {
-        t = res.data.token;
-        handleCookie();
-        navigateHome();
-      });
+  // const Login = async () => {
+  //   // eslint-disable-next-line
+  //   const res = await axios
+  //     .post("http://localhost:4000/login", data, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     })
+  //     .then((res) => {
+  //       t = res.data.token;
+  //       handleCookie();
+  //       navigateHome();
+  //     });
+  // };
+
+  const Login = () => {
+    signInWithEmailAndPassword(auth, email, pass).then((userCredential) => {
+      t = "something here";
+      handleCookie();
+      navigateHome();
+    });
   };
 
   return (
     <div className="cm">
       <div className="form">
-        <img src={authLogo} alt="logo" id="authLogo"/>
+        <img src={authLogo} alt="logo" id="authLogo" />
         <h1>Conectare</h1>
         <div className="input">
           <span className="eticheta">Email*</span>

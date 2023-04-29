@@ -6,12 +6,13 @@ import { useCookies } from "react-cookie";
 const bike_img = require("../assets/bike1.png");
 const trotineta_img = require("../assets/trotineta.png");
 const shop = require("../assets/shopping.png");
-const login = require("../assets/login.png")
+const login = require("../assets/login.png");
 
 function Inchiriaza() {
   const [bikes, setBikes] = useState<any[]>([]);
 
   useEffect(() => {
+    // eslint-disable-next-line
     const res = axios.get("http://localhost:4000/bikes").then((res) => {
       setBikes(res.data);
       console.log(res.data);
@@ -19,6 +20,7 @@ function Inchiriaza() {
   }, []);
 
   const [checked, setChecked] = useState("");
+  // eslint-disable-next-line
   const [cookies, setCookies] = useCookies();
   if (cookies.token!) {
     return (
@@ -87,6 +89,19 @@ function Inchiriaza() {
               <label htmlFor="cluj">Cluj</label>
             </div>
           </div>
+          <div className="echipament">
+            <h2>Dorești echipament de protecție ?</h2>
+            <div className="smt">
+              <div className="echipament-item">
+                <input type="radio" id="da" name="echipament"></input>
+                <label htmlFor="da">Da</label>
+              </div>
+              <div className="echipament-item">
+                <input type="radio" id="nu" name="echipament"></input>
+                <label htmlFor="nu">Nu</label>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="list">
           {bikes.map((bike) => {
@@ -111,6 +126,7 @@ function Inchiriaza() {
                             a: bike.available,
                             id: bike.id,
                           });
+                          // eslint-disable-next-line
                           const res = axios.post(
                             "http://localhost:4000/update",
                             data,
@@ -150,6 +166,7 @@ function Inchiriaza() {
                             a: bike.available,
                             id: bike.id,
                           });
+                          // eslint-disable-next-line
                           const res = axios.post(
                             "http://localhost:4000/update",
                             data,
@@ -170,6 +187,7 @@ function Inchiriaza() {
                 }
               }
             }
+            return 0;
           })}
         </div>
       </div>
