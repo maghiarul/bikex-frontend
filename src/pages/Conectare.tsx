@@ -1,28 +1,19 @@
-import React from "react";
 import "../styles/conectare.scss";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
-
-import config from "../firebaseConfig";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import * as lol from "firebase/app";
-
+import config from "../base";
+import { getAuth } from "firebase/auth";
+import * as firebase from "firebase/app";
+import React, { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+const app = firebase.initializeApp(config);
+const auth = getAuth(app);
 const authLogo = require("../assets/auth.png");
-
-lol.initializeApp(config);
-const auth = getAuth();
 
 function Conectare() {
   const navigate = useNavigate();
   const navigateHome = () => {
     navigate("/");
   };
-
-  var t = "";
 
   const [email, setEmail] = useState("");
   const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,52 +25,16 @@ function Conectare() {
   const handlePass = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPass(e.target.value);
   };
-
-  // const data = JSON.stringify({
-  //   email: email,
-  //   password: pass,
-  // });
-  // eslint-disable-next-line
-  const [cookies, setCookie] = useCookies(["token"]);
-
-  const handleCookie = () => {
-    setCookie("token", t, {
-      path: "/",
-      maxAge: 3600,
-      secure: true,
-      sameSite: "none",
-    });
-    // setCookie("email", email, {
-    //   path: "/",
-    //   maxAge: 3600,
-    //   secure: true,
-    //   sameSite: "none",
-    // });
-  };
-
-  // const Login = async () => {
-  //   // eslint-disable-next-line
-  //   const res = await axios
-  //     .post("http://localhost:4000/login", data, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     })
-  //     .then((res) => {
-  //       t = res.data.token;
-  //       handleCookie();
-  //       navigateHome();
-  //     });
-  // };
-
-  const Login = () => {
-    signInWithEmailAndPassword(auth, email, pass).then((userCredential) => {
-      t = "something here";
-      handleCookie();
-      navigateHome();
-    });
-  };
-
+  async function LogIn() {
+    await signInWithEmailAndPassword(auth, email, pass)
+      .then((userCredential) => {
+        const userC = userCredential.user;
+        localStorage.setItem("user", JSON.stringify(userC));
+      })
+      .then(() => {
+        navigateHome();
+      });
+  }
   return (
     <div className="cm">
       <div className="form">
@@ -93,7 +48,13 @@ function Conectare() {
           <span className="eticheta">Parolă*</span>
           <input type="password" required onChange={handlePass}></input>
         </div>
-        <button onClick={() => Login()}>Conectare</button>
+        <button
+          onClick={() => {
+            LogIn();
+          }}
+        >
+          Conectare
+        </button>
         <h2>
           Nu ai deja cont ? Fă-ți unul <a href="/inscriere">aici.</a>
         </h2>

@@ -2,14 +2,13 @@ import React from "react";
 import "../styles/inscriere.scss";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import config from "../firebaseConfig";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import * as lol from "firebase/app";
-
+import config from "../base";
+import { getAuth } from "firebase/auth";
+import * as firebase from "firebase/app";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+const app = firebase.initializeApp(config);
+const auth = getAuth(app);
 const regLogo = require("../assets/regLogo.png");
-
-lol.initializeApp(config);
-const auth = getAuth();
 
 function Inscriere() {
   const navigate = useNavigate();
@@ -27,25 +26,12 @@ function Inscriere() {
     setPass(e.target.value);
   };
 
-  // const data = JSON.stringify({
-  //   email: email,
-  //   password: pass,
-  // });
-
-  // const Register = async () => {
-  //   // eslint-disable-next-line
-  //   const res = await axios.post("http://localhost:4000/register", data, {
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   });
-  //   navigateHome();
-  // };
-  const Register = () => {
-    createUserWithEmailAndPassword(auth, email, pass).then((userCredential) => {
+  async function Register() {
+    await createUserWithEmailAndPassword(auth, email, pass).then(() => {
       navigateHome();
     });
-  };
+  }
+
   return (
     <div className="cm">
       <div className="form">
@@ -59,7 +45,13 @@ function Inscriere() {
           <span className="eticheta">Parolă*</span>
           <input type="password" required onChange={handlePass}></input>
         </div>
-        <button onClick={() => Register()}>Înscriere</button>
+        <button
+          onClick={() => {
+            Register();
+          }}
+        >
+          Înscriere
+        </button>
         <h2>
           Ai deja cont ? Conectează-te <a href="/conectare">aici.</a>
         </h2>

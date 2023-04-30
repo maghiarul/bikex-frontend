@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../styles/inchiriaza.scss";
 import axios from "axios";
-import { useCookies } from "react-cookie";
 
 const bike_img = require("../assets/bike1.png");
 const trotineta_img = require("../assets/trotineta.png");
@@ -10,19 +9,11 @@ const login = require("../assets/login.png");
 
 function Inchiriaza() {
   const [bikes, setBikes] = useState<any[]>([]);
-
-  useEffect(() => {
-    // eslint-disable-next-line
-    const res = axios.get("http://localhost:4000/bikes").then((res) => {
-      setBikes(res.data);
-      console.log(res.data);
-    });
-  }, []);
-
   const [checked, setChecked] = useState("");
-  // eslint-disable-next-line
-  const [cookies, setCookies] = useCookies();
-  if (cookies.token!) {
+
+  let user = JSON.parse(localStorage.getItem("user") || "{}");
+  console.log(user);
+  if (user !== null && user !== undefined) {
     return (
       <div className="nush">
         <div className="dropdown">

@@ -1,6 +1,4 @@
 import React from "react";
-import { useCookies } from "react-cookie";
-
 const logo = require("./assets/logo.png");
 const desen = require("./assets/desen.png");
 const placeholder = require("./assets/team.png");
@@ -11,9 +9,9 @@ const how = require("./assets/how.png");
 const user_pfp = require("./assets/user.png");
 
 function Home() {
-  // eslint-disable-next-line
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-  if (cookies.token === undefined) {
+  let user = JSON.parse(localStorage.getItem("user") || "{}");
+  console.log(user);
+  if (user === null || user === undefined) {
     return (
       <div className="container">
         <div className="container1">
@@ -142,6 +140,7 @@ function Home() {
     );
   } else {
     return (
+      // LOGGED IN PAGE
       <div className="container">
         <div className="container1">
           <div className="navbar">
@@ -170,7 +169,14 @@ function Home() {
                 </a>
               </div>
               <div className="nav-item" id="four">
-                <img src={user_pfp} id="user_pfp" alt="userpfp" />
+                <img
+                  src={user_pfp}
+                  id="user_pfp"
+                  alt="userpfp"
+                  onClick={() => {
+                    // signOut();
+                  }}
+                />
                 <svg
                   width="100"
                   height="100"
