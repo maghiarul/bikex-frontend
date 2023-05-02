@@ -9,9 +9,14 @@ const how = require("./assets/how.png");
 const user_pfp = require("./assets/user.png");
 
 function Home() {
+  // function signOut() {
+  //   localStorage.removeItem("user");
+  //   window.location.reload();
+  // }
+
   let user = JSON.parse(localStorage.getItem("user") || "{}");
-  console.log(user);
-  if (user === null || user === undefined) {
+
+  if (user.uid === undefined) {
     return (
       <div className="container">
         <div className="container1">
@@ -175,6 +180,7 @@ function Home() {
                   alt="userpfp"
                   onClick={() => {
                     // signOut();
+                    window.location.href="http://localhost:3000/dashboard"
                   }}
                 />
                 <svg

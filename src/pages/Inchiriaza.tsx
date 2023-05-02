@@ -12,8 +12,7 @@ function Inchiriaza() {
   const [checked, setChecked] = useState("");
 
   let user = JSON.parse(localStorage.getItem("user") || "{}");
-  console.log(user);
-  if (user !== null && user !== undefined) {
+  if (user.uid !== undefined) {
     return (
       <div className="nush">
         <div className="dropdown">

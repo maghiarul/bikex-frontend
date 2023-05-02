@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Inscriere from "./pages/Inscriere";
 import Descopera from "./pages/Descopera";
 import Inchiriaza from "./pages/Inchiriaza";
+import Dashboard from "./pages/Dashboard";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -19,6 +20,7 @@ root.render(
       <Route path="/inscriere" element={<Inscriere />} />
       <Route path="/descopera" element={<Descopera />} />
       <Route path="/inchiriaza" element={<Inchiriaza />} />
+      <Route path="/dashboard" element={<Dashboard />} />
     </Routes>
   </BrowserRouter>
 );
