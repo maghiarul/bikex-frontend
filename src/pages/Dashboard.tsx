@@ -37,7 +37,7 @@ function Dashboard() {
   // };
 
   const [r, setR] = useState<any[]>([]);
-  const [b, setB] = useState<any[]>([]);
+  // const [b, setB] = useState<any[]>([]);
 
   useEffect(() => {
     const smt = async () => {
@@ -59,18 +59,18 @@ function Dashboard() {
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-    const here = async () => {
-      const bikesRef = collection(db, "bikes");
-      const bikes = getDocs(bikesRef);
-      (await bikes).forEach((bike) => {
-        const bk_object = JSON.parse(JSON.stringify(bike.data()));
-        setB((prev) => [...prev, bk_object]);
-      });
-    };
-    // eslint-disable-next-line
-    const alt = here().catch(console.error);
-  }, []);
+  // useEffect(() => {
+  //   const here = async () => {
+  //     const bikesRef = collection(db, "bikes");
+  //     const bikes = getDocs(bikesRef);
+  //     (await bikes).forEach((bike) => {
+  //       const bk_object = JSON.parse(JSON.stringify(bike.data()));
+  //       setB((prev) => [...prev, bk_object]);
+  //     });
+  //   };
+  //   // eslint-disable-next-line
+  //   const alt = here().catch(console.error);
+  // }, []);
 
   if (user.uid !== undefined) {
     return (
@@ -101,7 +101,7 @@ function Dashboard() {
             );
           })}
         </div>
-        <h1>AVAILABLE BIKES</h1>
+        {/* <h1>AVAILABLE BIKES</h1>
         <div className="rides">
           {b.map((bike) => {
             return (
@@ -116,7 +116,7 @@ function Dashboard() {
               </div>
             );
           })}
-        </div>
+        </div> */}
       </div>
     );
   } else {

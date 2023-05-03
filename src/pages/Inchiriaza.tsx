@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "../styles/inchiriaza.scss";
 import axios from "axios";
+import { collection, getDocs } from "firebase/firestore";
+import config from "../base";
+import * as firebase from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+
+const app = firebase.initializeApp(config);
+const db = getFirestore(app);
 
 const bike_img = require("../assets/bike1.png");
 const trotineta_img = require("../assets/trotineta.png");
@@ -8,8 +15,21 @@ const shop = require("../assets/shopping.png");
 const login = require("../assets/login.png");
 
 function Inchiriaza() {
-  const [bikes, setBikes] = useState<any[]>([]);
+  const [b, setB] = useState<any[]>([]);
   const [checked, setChecked] = useState("");
+
+  useEffect(() => {
+    const here = async () => {
+      const bikesRef = collection(db, "bikes");
+      const bikes = getDocs(bikesRef);
+      (await bikes).forEach((bike) => {
+        const bk_object = JSON.parse(JSON.stringify(bike.data()));
+        setB((prev) => [...prev, bk_object]);
+      });
+    };
+    // eslint-disable-next-line
+    const alt = here().catch(console.error);
+  }, []);
 
   let user = JSON.parse(localStorage.getItem("user") || "{}");
   if (user.uid !== undefined) {
@@ -94,9 +114,9 @@ function Inchiriaza() {
           </div>
         </div>
         <div className="list">
-          {bikes.map((bike) => {
+          {b.map((bike) => {
             if (bike.city === checked) {
-              if (bike.type === "Bicicleta") {
+              if (bike.type === "bicicleta") {
                 if (bike.available !== 0) {
                   return (
                     <div className="list-item" key={bike.id}>
@@ -136,7 +156,7 @@ function Inchiriaza() {
                   );
                 }
               }
-              if (bike.type === "Trotineta") {
+              if (bike.type === "trotineta") {
                 if (bike.available !== 0) {
                   return (
                     <div className="list-item" key={bike.id} id={bike.id}>
@@ -177,7 +197,7 @@ function Inchiriaza() {
                 }
               }
             }
-            return 0;
+            return "";
           })}
         </div>
       </div>
