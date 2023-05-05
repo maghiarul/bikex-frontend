@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import config from "../base";
 import * as firebase from "firebase/app";
-import { getFirestore, query, where } from "firebase/firestore";
+import { addDoc, getFirestore, query, where } from "firebase/firestore";
 import { collection, getDocs } from "firebase/firestore";
 import "../styles/dashboard.scss";
+import { useGeolocated } from "react-geolocated";
 
 const app = firebase.initializeApp(config);
 const db = getFirestore(app);
@@ -71,6 +72,25 @@ function Dashboard() {
   //   // eslint-disable-next-line
   //   const alt = here().catch(console.error);
   // }, []);
+  const { coords, isGeolocationAvailable, isGeolocationEnabled } =
+    useGeolocated({
+      positionOptions: {
+        enableHighAccuracy: true,
+      },
+      userDecisionTimeout: 5000,
+    });
+
+  // const addNewPoint = async () => {
+  //   const col = collection(db, "garbage");
+  //   const res = await addDoc(col, { location: [40.002134, 23.1238904781] });
+  //   console.log("Added succesfully with ID " + res.id);
+  // };
+
+  async function addNew(latitude: any, longitude: any) {
+    const col = collection(db, "garbage");
+    const res = await addDoc(col, { location: [latitude, longitude] });
+    console.log("Added succesfully with ID " + res.id);
+  }
 
   if (user.uid !== undefined) {
     return (
@@ -117,6 +137,25 @@ function Dashboard() {
             );
           })}
         </div> */}
+
+        <div>
+          <button
+            onClick={() => {
+              if (isGeolocationAvailable) {
+                if (isGeolocationEnabled) {
+                  console.log(coords);
+                  addNew(coords?.latitude, coords?.longitude);
+                } else {
+                  console.log("enable geolocation");
+                }
+              } else {
+                console.log("geolocation is not available");
+              }
+            }}
+          >
+            GPS
+          </button>
+        </div>
       </div>
     );
   } else {
