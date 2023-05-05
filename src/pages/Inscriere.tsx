@@ -6,9 +6,14 @@ import config from "../base";
 import { getAuth } from "firebase/auth";
 import * as firebase from "firebase/app";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+
+import { addDoc, getFirestore } from "firebase/firestore";
+import { collection } from "firebase/firestore";
 const app = firebase.initializeApp(config);
 const auth = getAuth(app);
 const regLogo = require("../assets/regLogo.png");
+
+const db = getFirestore(app);
 
 function Inscriere() {
   const navigate = useNavigate();
@@ -26,10 +31,21 @@ function Inscriere() {
     setPass(e.target.value);
   };
 
+
+  async function addUser() {
+    const lo = collection(db, "users");
+    const kek = await addDoc(lo, { admin: 0, email: email, points: 0 });
+    console.log("New user added to the database with ID " + kek.id);
+  }
+
   async function Register() {
-    await createUserWithEmailAndPassword(auth, email, pass).then(() => {
-      navigateHome();
-    });
+    await createUserWithEmailAndPassword(auth, email, pass)
+      .then(() => {
+        addUser();
+      })
+      .then(() => {
+        navigateHome();
+      });
   }
 
   return (
