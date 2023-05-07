@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from "react";
 import config from "../base";
 import * as firebase from "firebase/app";
-import { addDoc, getFirestore, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  doc,
+  getFirestore,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { collection, getDocs } from "firebase/firestore";
 import "../styles/dashboard.scss";
 import { useGeolocated } from "react-geolocated";
+import axios from "axios";
+import { getPreciseDistance } from "geolib";
 
 const app = firebase.initializeApp(config);
 const db = getFirestore(app);
@@ -90,6 +99,67 @@ function Dashboard() {
     const col = collection(db, "garbage");
     const res = await addDoc(col, { location: [latitude, longitude] });
     console.log("Added succesfully with ID " + res.id);
+    // https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat={lat}&lon={lon}
+  }
+
+  // const token = "pk.0e2cc8006f0f362109a7742c0e55d921";
+  const [from_address, setFromAddress] = useState("default values");
+  const [to_address, setToAddress] = useState("default values");
+
+  // async function getFromAddress(latitude: any, longitude: any) {
+  //   const res = await axios.get(
+  //     `https://eu1.locationiq.com/v1/reverse?key=${token}&lat=${latitude}&lon=${longitude}&format=json`
+  //   );
+  //   setFromAddress(res.data.display_name);
+  // }
+  // async function getToAddress(latitude: any, longitude: any) {
+  //   const res = await axios.get(
+  //     `https://eu1.locationiq.com/v1/reverse?key=${token}&lat=${latitude}&lon=${longitude}&format=json`
+  //   );
+  //   setToAddress(res.data.display_name);
+  // }
+  let d: any, p: any;
+  async function unrent() {
+    const u = await getDocs(q);
+    const id = u.docs[0].id;
+    const refR = collection(db, `users/${id}/rides`);
+    const ref = query(refR, where("price", "==", null));
+    const us = await getDocs(ref);
+    const bikeID = us.docs[0].id;
+    const bikeDATA = us.docs[0].data();
+    const anotherRef = doc(db, `users/${id}/rides`, bikeID);
+    if (isGeolocationAvailable) {
+      if (isGeolocationEnabled) {
+        await updateDoc(anotherRef, {
+          to: { latitude: coords?.latitude, longitude: coords?.longitude },
+        })
+          .then(() => {
+            console.log(bikeDATA);
+            d = getPreciseDistance(
+              {
+                latitude: bikeDATA.from.latitude,
+                longitude: bikeDATA.from.longitude,
+              },
+              {
+                latitude: bikeDATA.to.latitude,
+                longitude: bikeDATA.to.longitude,
+              }
+            );
+            // distance in km = distance / 1000
+            p = (d / 1000) * 5;
+          })
+          .then(async () => {
+            await updateDoc(anotherRef, {
+              price: p,
+              distance: d,
+            });
+          });
+      } else {
+        console.log("enable geolocation");
+      }
+    } else {
+      console.log("geolocation is not available");
+    }
   }
 
   if (user.uid !== undefined) {
@@ -107,22 +177,44 @@ function Dashboard() {
         <h1>RIDE HISTORY</h1>
         <div className="rides">
           {r.map((ride) => {
-            return (
-              <div key={ride.from.latitude} className="ride">
-                <span>Type: {ride.bike} </span>
-                <span>Price: {ride.price} lei </span>
-                <span>
-                  From: {ride.from.latitude} - {ride.from.longitude}
-                </span>
-                <span>
-                  To: {ride.to.latitude} - {ride.to.longitude}
-                </span>
-              </div>
-            );
+            // getFromAddress(ride.from.latitude, ride.from.longitude);
+            // getToAddress(ride.to.latitude, ride.to.longitude);
+            if (ride.price !== null)
+              return (
+                <div key={ride.price} className="ride">
+                  <span>Type: {ride.type} </span>
+                  <span>Price: {ride.price} lei </span>
+                  <span>Distance: {ride.distance / 1000} KM </span>
+                  <span>From: {from_address}</span>
+                  <span>To: {to_address}</span>
+                </div>
+              );
+            else if (ride.price === null)
+              return (
+                <div key={ride.price} className="ride">
+                  <span>Active ride</span>
+                  <span>Type: {ride.type} </span>
+                  <span>Price: {ride.price} lei </span>
+                  <span>Distance: {ride.distance} KM </span>
+                  <span>From: {from_address}</span>
+                  <span>To: {to_address}</span>
+                  <button
+                    onClick={() => {
+                      unrent().then(() => {
+                        window.location.reload();
+                      });
+                    }}
+                  >
+                    unrent
+                  </button>
+                </div>
+              );
+            return "";
           })}
         </div>
         {/* <h1>AVAILABLE BIKES</h1>
         <div className="rides">
+        , , 
           {b.map((bike) => {
             return (
               <div key={bike.id} className="ride">

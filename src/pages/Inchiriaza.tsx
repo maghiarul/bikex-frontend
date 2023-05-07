@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import "../styles/inchiriaza.scss";
-import axios from "axios";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  addDoc,
+  where,
+  updateDoc,
+  doc,
+  documentId,
+} from "firebase/firestore";
 import config from "../base";
 import * as firebase from "firebase/app";
 import { getFirestore } from "firebase/firestore";
@@ -17,6 +25,7 @@ const login = require("../assets/login.png");
 function Inchiriaza() {
   const [b, setB] = useState<any[]>([]);
   const [checked, setChecked] = useState("");
+  let user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     const here = async () => {
@@ -31,7 +40,42 @@ function Inchiriaza() {
     const alt = here().catch(console.error);
   }, []);
 
-  let user = JSON.parse(localStorage.getItem("user") || "{}");
+  const userRef = collection(db, "users");
+  const q = query(userRef, where("email", "==", `${user.email}`));
+  let lat: number, long: number;
+  async function inchiriaza(type: string, price: number) {
+    const u = await getDocs(q);
+    const id = u.docs[0].id;
+    const rideRef = collection(db, `users/${id}/rides`);
+    await addDoc(rideRef, {
+      type: type,
+      price: null,
+      from: { latitude: lat, longitude: long },
+      to: { latitude: null, longitude: null },
+      distance: null,
+    }).then((res) => {
+      console.log("Bike added successfully with id" + res.id);
+    });
+  }
+
+  async function updateRides(bike_id: number) {
+    const rideRef = collection(db, "bikes");
+    const rideQ = query(rideRef, where("id", "==", bike_id));
+    const us = await getDocs(rideQ);
+    const id = us.docs[0].id;
+    const anotherRef = doc(db, "bikes", id);
+    const anotherCol = collection(db, "bikes");
+    const aCol = query(anotherCol, where(documentId(), "==", id));
+    await getDocs(aCol).then((rides) => {
+      const loc = rides.docs[0].data().location;
+      lat = loc._lat;
+      long = loc._long;
+    });
+    await updateDoc(anotherRef, {
+      available: 0,
+    });
+  }
+
   if (user.uid !== undefined) {
     return (
       <div className="nush">
@@ -116,7 +160,7 @@ function Inchiriaza() {
         <div className="list">
           {b.map((bike) => {
             if (bike.city === checked) {
-              if (bike.type === "bicicleta") {
+              if (bike.type === "Bicicleta") {
                 if (bike.available !== 0) {
                   return (
                     <div className="list-item" key={bike.id}>
@@ -132,31 +176,18 @@ function Inchiriaza() {
                         alt="inchiriaza"
                         className="shop"
                         onClick={() => {
-                          const data = JSON.stringify({
-                            a: bike.available,
-                            id: bike.id,
+                          updateRides(bike.id).then(() => {
+                            inchiriaza(bike.type, bike.price).then(() => {
+                              window.location.reload();
+                            });
                           });
-                          // eslint-disable-next-line
-                          const res = axios.post(
-                            "http://localhost:4000/update",
-                            data,
-                            {
-                              headers: {
-                                "Content-Type": "application/json",
-                              },
-                            }
-                          );
-                          window.alert(
-                            `${bike.type} a fost inchiriata cu succes.`
-                          );
-                          window.location.reload();
                         }}
                       />
                     </div>
                   );
                 }
               }
-              if (bike.type === "trotineta") {
+              if (bike.type === "Trotineta") {
                 if (bike.available !== 0) {
                   return (
                     <div className="list-item" key={bike.id} id={bike.id}>
@@ -172,24 +203,11 @@ function Inchiriaza() {
                         alt="inchiriaza"
                         className="shop"
                         onClick={() => {
-                          const data = JSON.stringify({
-                            a: bike.available,
-                            id: bike.id,
+                          updateRides(bike.id).then(() => {
+                            inchiriaza(bike.type, bike.price).then(() => {
+                              window.location.reload();
+                            });
                           });
-                          // eslint-disable-next-line
-                          const res = axios.post(
-                            "http://localhost:4000/update",
-                            data,
-                            {
-                              headers: {
-                                "Content-Type": "application/json",
-                              },
-                            }
-                          );
-                          window.alert(
-                            `${bike.type} a fost inchiriata cu succes.`
-                          );
-                          window.location.reload();
                         }}
                       />
                     </div>
