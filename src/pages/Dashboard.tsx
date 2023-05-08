@@ -12,6 +12,7 @@ import {
 import { collection, getDocs } from "firebase/firestore";
 import "../styles/dashboard.scss";
 import { useGeolocated } from "react-geolocated";
+// eslint-disable-next-line
 import axios from "axios";
 import { getPreciseDistance } from "geolib";
 
@@ -86,7 +87,7 @@ function Dashboard() {
       positionOptions: {
         enableHighAccuracy: true,
       },
-      userDecisionTimeout: 5000,
+      userDecisionTimeout: 25000,
     });
 
   // const addNewPoint = async () => {
@@ -103,7 +104,9 @@ function Dashboard() {
   }
 
   // const token = "pk.0e2cc8006f0f362109a7742c0e55d921";
+  // eslint-disable-next-line
   const [from_address, setFromAddress] = useState("default values");
+  // eslint-disable-next-line
   const [to_address, setToAddress] = useState("default values");
 
   // async function getFromAddress(latitude: any, longitude: any) {
