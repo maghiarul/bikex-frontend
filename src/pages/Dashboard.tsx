@@ -131,37 +131,38 @@ function Dashboard() {
     const bikeID = us.docs[0].id;
     const bikeDATA = us.docs[0].data();
     const anotherRef = doc(db, `users/${id}/rides`, bikeID);
-    if (isGeolocationAvailable) {
-      if (isGeolocationEnabled) {
-        await updateDoc(anotherRef, {
-          to: { latitude: coords?.latitude, longitude: coords?.longitude },
-        })
-          .then(() => {
-            console.log(bikeDATA);
-            d = getPreciseDistance(
-              {
-                latitude: bikeDATA.from.latitude,
-                longitude: bikeDATA.from.longitude,
-              },
-              {
-                latitude: bikeDATA.to.latitude,
-                longitude: bikeDATA.to.longitude,
-              }
-            );
-            // distance in km = distance / 1000
-            p = (d / 1000) * 5;
+    if (coords !== undefined) {
+      if (isGeolocationAvailable) {
+        if (isGeolocationEnabled) {
+          await updateDoc(anotherRef, {
+            to: { latitude: coords?.latitude, longitude: coords?.longitude },
           })
-          .then(async () => {
-            await updateDoc(anotherRef, {
-              price: p,
-              distance: d,
+            .then(() => {
+              d = getPreciseDistance(
+                {
+                  latitude: bikeDATA.from.latitude,
+                  longitude: bikeDATA.from.longitude,
+                },
+                {
+                  latitude: bikeDATA.to.latitude,
+                  longitude: bikeDATA.to.longitude,
+                }
+              );
+              // distance in km = distance / 1000
+              p = (d / 1000) * 5;
+            })
+            .then(async () => {
+              await updateDoc(anotherRef, {
+                price: p,
+                distance: d,
+              });
             });
-          });
+        } else {
+          console.log("enable geolocation");
+        }
       } else {
-        console.log("enable geolocation");
+        console.log("geolocation is not available");
       }
-    } else {
-      console.log("geolocation is not available");
     }
   }
 

@@ -207,3 +207,53 @@ svg {
 .disabled {
   display: none;
 }
+
+@media (min-width: 768px) and (max-width: 1441px) {
+  .heading {
+    margin-top: 7rem;
+  }
+  .desen {
+    img {
+      width: 50vw;
+      height: auto;
+    }
+  }
+  .why_us {
+    .text_img {
+      img {
+        width: 400px;
+        height: auto;
+        margin-top: 10rem;
+      }
+    }
+  }
+  .how_img {
+    img {
+      width: 1150px;
+      height: auto;
+      margin-top: 8rem;
+    }
+  }
+  .how {
+    padding-top: 5rem;
+  }
+  .quote {
+    h1 {
+      font-size: 82px;
+    }
+  }
+  .text_img {
+    .text {
+      p {
+        font-size: 25px !important;
+      }
+    }
+  }
+  .text_p {
+    .text {
+      p {
+        font-size: 25px !important;
+      }
+    }
+  }
+}

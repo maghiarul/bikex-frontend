@@ -9,6 +9,7 @@ import {
   updateDoc,
   doc,
   documentId,
+  setDoc,
 } from "firebase/firestore";
 import config from "../base";
 import * as firebase from "firebase/app";
@@ -47,6 +48,7 @@ function Inchiriaza() {
     const u = await getDocs(q);
     const id = u.docs[0].id;
     const rideRef = collection(db, `users/${id}/rides`);
+    const pointss = u.docs[0].data().points;
     await addDoc(rideRef, {
       type: type,
       price: null,
@@ -55,6 +57,11 @@ function Inchiriaza() {
       distance: null,
     }).then((res) => {
       console.log("Bike added successfully with id" + res.id);
+    });
+
+    const userref = doc(db, "users", id);
+    await updateDoc(userref, { points: pointss + 1 }).then(() => {
+      console.log("points added");
     });
   }
 

@@ -134,3 +134,15 @@
 .echipament{
   margin-bottom: 3rem;
 }
+
+@media (min-width: 768px) and (max-width: 1441px) {
+  .dropdown{
+    h1{
+      font-size: 20px;
+    }
+    h2{
+      font-size: 18px;
+      text-align: center;
+    }
+  }
+}
