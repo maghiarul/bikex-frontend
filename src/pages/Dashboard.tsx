@@ -15,6 +15,17 @@ import { useGeolocated } from "react-geolocated";
 // eslint-disable-next-line
 import axios from "axios";
 import { getPreciseDistance } from "geolib";
+import Map from "ol/Map.js";
+import OSM from "ol/source/OSM.js";
+import TileLayer from "ol/layer/Tile.js";
+import View from "ol/View.js";
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from "ol/source/Vector";
+import { Feature } from "ol";
+import { Point } from "ol/geom";
+import { fromLonLat, transform } from "ol/proj";
+import Style from "ol/style/Style";
+import Icon from "ol/style/Icon";
 
 const app = firebase.initializeApp(config);
 const db = getFirestore(app);
@@ -27,25 +38,6 @@ function Dashboard() {
   let user = JSON.parse(localStorage.getItem("user") || "{}");
   const userRef = collection(db, "users");
   const q = query(userRef, where("email", "==", `${user.email}`));
-  // const smt = async () => {
-  //   const querySnapshot = await getDocs(q);
-  //   console.log(querySnapshot.docs[0].id);
-  //   if (querySnapshot.docs[0].data().email === user.email) {
-  //     const ridesRef = collection(
-  //       db,
-  //       `users/${querySnapshot.docs[0].id}/rides`
-  //     );
-  //     const rides = getDocs(ridesRef);
-  //     (await rides).forEach((ride) => {
-  //       // ca sa poti vedea objectul
-  //       const rd = JSON.stringify(ride.data());
-  //       console.log(`${ride.id} => ${rd}`);
-  //       // ca sa poti folosi variabilele din object
-  //       // const rd = JSON.parse(JSON.stringify(ride.data()));
-  //       // console.log(rd.bike);
-  //     });
-  //   }
-  // };
 
   const [r, setR] = useState<any[]>([]);
   // const [b, setB] = useState<any[]>([]);
@@ -70,18 +62,6 @@ function Dashboard() {
     // eslint-disable-next-line
   }, []);
 
-  // useEffect(() => {
-  //   const here = async () => {
-  //     const bikesRef = collection(db, "bikes");
-  //     const bikes = getDocs(bikesRef);
-  //     (await bikes).forEach((bike) => {
-  //       const bk_object = JSON.parse(JSON.stringify(bike.data()));
-  //       setB((prev) => [...prev, bk_object]);
-  //     });
-  //   };
-  //   // eslint-disable-next-line
-  //   const alt = here().catch(console.error);
-  // }, []);
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
       positionOptions: {
@@ -90,15 +70,9 @@ function Dashboard() {
       userDecisionTimeout: 25000,
     });
 
-  // const addNewPoint = async () => {
-  //   const col = collection(db, "garbage");
-  //   const res = await addDoc(col, { location: [40.002134, 23.1238904781] });
-  //   console.log("Added succesfully with ID " + res.id);
-  // };
-
   async function addNew(latitude: any, longitude: any) {
     const col = collection(db, "garbage");
-    const res = await addDoc(col, { location: [latitude, longitude] });
+    const res = await addDoc(col, { location: { longitude, latitude } });
     console.log("Added succesfully with ID " + res.id);
     // https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat={lat}&lon={lon}
   }
@@ -166,6 +140,85 @@ function Dashboard() {
     }
   }
 
+  const [btn_msg, setBtnMsg] = useState("");
+
+  useEffect(() => {
+    const but = document.getElementById("rent");
+    setBtnMsg("Loading...");
+    if (coords) {
+      but?.removeAttribute("disabled");
+      setBtnMsg("Unrent");
+    }
+  }, [coords]);
+
+  const [garbage, setGarbage] = useState<any[]>([]);
+
+  async function getPoints() {
+    const ridesRef = collection(db, `garbage`);
+    // eslint-disable-next-line
+    const rides = await getDocs(ridesRef).then((rides_idk) => {
+      rides_idk.forEach((ride) => {
+        const rd_object = JSON.parse(JSON.stringify(ride.data()));
+        setGarbage((prev) => [...prev, rd_object.location]);
+      });
+    });
+  }
+
+  function callMap() {
+    const map = new Map({
+      target: "map2",
+      layers: [
+        new TileLayer({
+          source: new OSM(),
+        }),
+      ],
+      view: new View({
+        center: [0, 0],
+        zoom: 2,
+      }),
+    });
+    const layer = new VectorLayer({
+      source: new VectorSource({
+        features: garbage.map(
+          (point) =>
+            new Feature({
+              geometry: new Point(
+                fromLonLat([point.longitude, point.latitude])
+              ),
+            })
+        ),
+      }),
+      style: new Style({
+        image: new Icon({
+          anchor: [0.5, 1],
+          src: "https://i.ibb.co/qDYcwnv/marker.png",
+        }),
+      }),
+    });
+    map.addLayer(layer);
+    map
+      .getView()
+      .setCenter(
+        transform(
+          [24.944101381179326, 46.072497530954756],
+          "EPSG:4326",
+          "EPSG:3857"
+        )
+      );
+    map.getView().setZoom(7.5);
+  }
+
+  React.useEffect(() => {
+    getPoints();
+  }, []);
+
+  React.useEffect(() => {
+    if (garbage.length > 0) {
+      callMap();
+    }
+    // eslint-disable-next-line
+  }, [garbage]);
+
   if (user.uid !== undefined) {
     return (
       <div>
@@ -203,36 +256,20 @@ function Dashboard() {
                   <span>From: {from_address}</span>
                   <span>To: {to_address}</span>
                   <button
+                    id="rent"
                     onClick={() => {
                       unrent().then(() => {
                         window.location.reload();
                       });
                     }}
                   >
-                    unrent
+                    {btn_msg}
                   </button>
                 </div>
               );
             return "";
           })}
         </div>
-        {/* <h1>AVAILABLE BIKES</h1>
-        <div className="rides">
-        , , 
-          {b.map((bike) => {
-            return (
-              <div key={bike.id} className="ride">
-                <span>ID: {bike.id} </span>
-                <span>Type: {bike.type} </span>
-                <span>City: {bike.city} </span>
-                <span>
-                  Location: {bike.location.latitude} - {bike.location.longitude}
-                </span>
-                <span>Available: {bike.available}</span>
-              </div>
-            );
-          })}
-        </div> */}
 
         <div>
           <button
@@ -252,6 +289,8 @@ function Dashboard() {
             GPS
           </button>
         </div>
+        <h1>Garbage points to be collected</h1>
+        <div id="map2"></div>
       </div>
     );
   } else {

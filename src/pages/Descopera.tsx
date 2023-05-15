@@ -47,33 +47,6 @@ function Descopera() {
     });
     const layer = new VectorLayer({
       source: new VectorSource({
-        // features: [
-        //   new Feature({
-        //     geometry: new Point(
-        //       fromLonLat([28.035817017663444, 45.440741163831625])
-        //     ),
-        //   }),
-        //   new Feature({
-        //     geometry: new Point(
-        //       fromLonLat([27.603447293283057, 47.1547069796327])
-        //     ),
-        //   }),
-        //   new Feature({
-        //     geometry: new Point(
-        //       fromLonLat([26.102531257911046, 44.43534472004674])
-        //     ),
-        //   }),
-        //   new Feature({
-        //     geometry: new Point(
-        //       fromLonLat([25.609849723159783, 45.652208499224734])
-        //     ),
-        //   }),
-        //   new Feature({
-        //     geometry: new Point(
-        //       fromLonLat([23.596253795307078, 46.77183528160379])
-        //     ),
-        //   }),
-        // ],
         features: ridess.map(
           (point) =>
             new Feature({

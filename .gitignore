@@ -12,6 +12,7 @@
 /build
 
 .base.js
+*.js
 
 # misc
 .DS_Store
