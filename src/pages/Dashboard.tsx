@@ -30,6 +30,9 @@ import Icon from "ol/style/Icon";
 const app = firebase.initializeApp(config);
 const db = getFirestore(app);
 
+const bike_img = require("../assets/bike1.png");
+const trotineta_img = require("../assets/trotineta.png");
+
 function Dashboard() {
   function signOut() {
     localStorage.removeItem("user");
@@ -72,7 +75,7 @@ function Dashboard() {
 
   async function addNew(latitude: any, longitude: any) {
     const col = collection(db, "garbage");
-    const res = await addDoc(col, { location: { longitude, latitude } });
+    const res = await addDoc(col, { longitude: longitude, latitude: latitude });
     console.log("Added succesfully with ID " + res.id);
     // https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat={lat}&lon={lon}
   }
@@ -109,17 +112,18 @@ function Dashboard() {
       if (isGeolocationAvailable) {
         if (isGeolocationEnabled) {
           await updateDoc(anotherRef, {
-            to: { latitude: coords?.latitude, longitude: coords?.longitude },
+            // to: { latitude: coords?.latitude, longitude: coords?.longitude },
+            to: [coords?.latitude, coords?.longitude],
           })
             .then(() => {
               d = getPreciseDistance(
                 {
-                  latitude: bikeDATA.from.latitude,
-                  longitude: bikeDATA.from.longitude,
+                  latitude: bikeDATA.from[0],
+                  longitude: bikeDATA.from[1],
                 },
                 {
-                  latitude: bikeDATA.to.latitude,
-                  longitude: bikeDATA.to.longitude,
+                  latitude: bikeDATA.to[0],
+                  longitude: bikeDATA.to[1],
                 }
               );
               // distance in km = distance / 1000
@@ -159,7 +163,7 @@ function Dashboard() {
     const rides = await getDocs(ridesRef).then((rides_idk) => {
       rides_idk.forEach((ride) => {
         const rd_object = JSON.parse(JSON.stringify(ride.data()));
-        setGarbage((prev) => [...prev, rd_object.location]);
+        setGarbage((prev) => [...prev, rd_object]);
       });
     });
   }
@@ -215,82 +219,148 @@ function Dashboard() {
   React.useEffect(() => {
     if (garbage.length > 0) {
       callMap();
+      setHeight();
     }
     // eslint-disable-next-line
   }, [garbage]);
 
+  var body = document.body,
+    html = document.documentElement;
+
+  var height = Math.max(
+    body.scrollHeight,
+    body.offsetHeight,
+    html.clientHeight,
+    html.scrollHeight,
+    html.offsetHeight
+  );
+  function setHeight() {
+    const elm = document.getElementById("side-nav")!;
+    elm.style.height = `${height}px`;
+    console.log(height);
+  }
+  const user_pfp = require("../assets/user-pfp-white.png");
+
   if (user.uid !== undefined) {
     return (
-      <div>
-        <img alt="avatar" src={user.providerData[0].photoURL} />
-        <p>Logged in as: {user.providerData[0].email}</p>
-        <button
-          onClick={() => {
-            signOut();
-          }}
-        >
-          Sign out
-        </button>
-        <h1>RIDE HISTORY</h1>
-        <div className="rides">
-          {r.map((ride) => {
-            // getFromAddress(ride.from.latitude, ride.from.longitude);
-            // getToAddress(ride.to.latitude, ride.to.longitude);
-            if (ride.price !== null)
-              return (
-                <div key={ride.price} className="ride">
-                  <span>Type: {ride.type} </span>
-                  <span>Price: {ride.price} lei </span>
-                  <span>Distance: {ride.distance / 1000} KM </span>
-                  <span>From: {from_address}</span>
-                  <span>To: {to_address}</span>
-                </div>
-              );
-            else if (ride.price === null)
-              return (
-                <div key={ride.price} className="ride">
-                  <span>Active ride</span>
-                  <span>Type: {ride.type} </span>
-                  <span>Price: {ride.price} lei </span>
-                  <span>Distance: {ride.distance} KM </span>
-                  <span>From: {from_address}</span>
-                  <span>To: {to_address}</span>
-                  <button
-                    id="rent"
-                    onClick={() => {
-                      unrent().then(() => {
-                        window.location.reload();
-                      });
-                    }}
-                  >
-                    {btn_msg}
-                  </button>
-                </div>
-              );
-            return "";
-          })}
+      <div className="bif">
+        <div className="side-nav" onLoad={setHeight} id="side-nav">
+          <div className="user">
+            <img alt="avatar" src={user_pfp} />
+            <div>
+              <p>{user.providerData[0].email}</p>
+              <button
+                onClick={() => {
+                  signOut();
+                }}
+              >
+                Sign out
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <button
-            onClick={() => {
-              if (isGeolocationAvailable) {
-                if (isGeolocationEnabled) {
-                  console.log(coords);
-                  addNew(coords?.latitude, coords?.longitude);
+        <div className="content">
+          <div className="ride-history">
+            <h1>Ride History</h1>
+            <div className="rides">
+              {r.map((ride) => {
+                // getFromAddress(ride.from.latitude, ride.from.longitude);
+                // getToAddress(ride.to.latitude, ride.to.longitude);
+                if (ride.price !== null) {
+                  if (ride.type === "Bicicleta")
+                    return (
+                      <div key={ride.price} className="ride">
+                        <img className="bicicleta" src={bike_img}></img>
+                        <div>
+                          <div className="al">
+                            <span>Type: {ride.type} </span>
+                          </div>
+                          <span>Price: {ride.price} lei </span>
+                          <span>Distance: {ride.distance / 1000} KM </span>
+                        </div>
+                      </div>
+                    );
+                  else if (ride.type === "Trotineta")
+                    return (
+                      <div key={ride.price} className="ride">
+                        <img className="trotineta" src={trotineta_img}></img>
+                        <div>
+                          <div className="al">
+                            <span>Type: {ride.type} </span>
+                          </div>
+                          <span>Price: {ride.price} lei </span>
+                          <span>Distance: {ride.distance / 1000} KM </span>
+                        </div>
+                      </div>
+                    );
+                } else if (ride.price === null)
+                  if (ride.type === "Trotineta")
+                    return (
+                      <div key={ride.price} className="ride unrent">
+                        <img className="trotineta" src={trotineta_img}></img>
+                        <div>
+                          <span>Active ride</span>
+                          <button
+                            id="rent"
+                            onClick={() => {
+                              unrent().then(() => {
+                                window.location.reload();
+                              });
+                            }}
+                          >
+                            {btn_msg}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  else if (ride.type === "Bicicleta")
+                    return (
+                      <div key={ride.price} className="ride unrent">
+                        <img className="bicicleta" src={bike_img}></img>
+                        <div>
+                          <span>Active ride</span>
+                          <button
+                            id="rent"
+                            onClick={() => {
+                              unrent().then(() => {
+                                window.location.reload();
+                              });
+                            }}
+                          >
+                            {btn_msg}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                return "";
+              })}
+            </div>
+          </div>
+
+          <div className="garbages">
+            <div className="smtt">
+              <h1>Garbage points to be collected</h1>
+              <div id="map2"></div>
+            </div>
+            <button className="learn-more"
+              onClick={() => {
+                if (isGeolocationAvailable) {
+                  if (isGeolocationEnabled) {
+                    console.log(coords);
+                    addNew(coords?.latitude, coords?.longitude);
+                  } else {
+                    console.log("enable geolocation");
+                  }
                 } else {
-                  console.log("enable geolocation");
+                  console.log("geolocation is not available");
                 }
-              } else {
-                console.log("geolocation is not available");
-              }
-            }}
-          >
-            GPS
-          </button>
+              }}
+            >
+              Click to add a garbage point.
+            </button>
+          </div>
         </div>
-        <h1>Garbage points to be collected</h1>
-        <div id="map2"></div>
       </div>
     );
   } else {

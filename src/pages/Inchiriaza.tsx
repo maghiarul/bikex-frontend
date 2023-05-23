@@ -9,7 +9,6 @@ import {
   updateDoc,
   doc,
   documentId,
-  setDoc,
 } from "firebase/firestore";
 import config from "../base";
 import * as firebase from "firebase/app";
@@ -52,8 +51,10 @@ function Inchiriaza() {
     await addDoc(rideRef, {
       type: type,
       price: null,
-      from: { latitude: lat, longitude: long },
-      to: { latitude: null, longitude: null },
+      // from: { latitude: lat, longitude: long },
+      // to: { latitude: null, longitude: null },
+      from: [lat, long],
+      to: [null, null],
       distance: null,
     }).then((res) => {
       console.log("Bike added successfully with id" + res.id);
