@@ -28,10 +28,13 @@ function Descopera() {
     const rides = await getDocs(ridesRef).then((rides_idk) => {
       rides_idk.forEach((ride) => {
         const rd_object = JSON.parse(JSON.stringify(ride.data()));
-        console.log(rd_object.location);
-        setRides((prev) => [...prev, rd_object.location]);
+        const locationn = {
+          latitude: rd_object.latitude,
+          longitude: rd_object.longitude,
+        };
+        setRides((prev) => [...prev, locationn]);
       });
-    });
+    }); 
   }
   function callMap() {
     const map = new Map({
