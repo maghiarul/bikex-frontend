@@ -75,9 +75,11 @@ function Inchiriaza() {
     const anotherCol = collection(db, "bikes");
     const aCol = query(anotherCol, where(documentId(), "==", id));
     await getDocs(aCol).then((rides) => {
-      const loc = rides.docs[0].data().location;
-      lat = loc._lat;
-      long = loc._long;
+      // const loc = rides.docs[0].data().location;
+      // lat = loc._lat;
+      // long = loc._long;
+      lat = rides.docs[0].data().latitude;
+      long = rides.docs[0].data().longitude;
     });
     await updateDoc(anotherRef, {
       available: 0,

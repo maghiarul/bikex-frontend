@@ -127,7 +127,7 @@ function Dashboard() {
                 }
               );
               // distance in km = distance / 1000
-              p = (d / 1000) * 5;
+              p = (d / 1000) * 0.5;
             })
             .then(async () => {
               await updateDoc(anotherRef, {
@@ -343,7 +343,8 @@ function Dashboard() {
               <h1>Garbage points to be collected</h1>
               <div id="map2"></div>
             </div>
-            <button className="learn-more"
+            <button
+              className="learn-more"
               onClick={() => {
                 if (isGeolocationAvailable) {
                   if (isGeolocationEnabled) {
@@ -366,9 +367,9 @@ function Dashboard() {
   } else {
     return (
       <div>
-        <h1>DU-TE SI LOGHEAZA-TE</h1>
+        <h1>Trebuie sa te loghezi mai intai !</h1>
         <button>
-          <a href="/conectare">IA DE AICI</a>
+          <a href="/conectare">Poftim aici.</a>
         </button>
       </div>
     );
